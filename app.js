@@ -47,6 +47,75 @@ app.use(fileUpload({
     preserveExtension: true
 }));
 
+// Route racine avec page d'accueil
+app.get('/', (req, res) => {
+    const html = `
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Backend E-Justice</title>
+        <style>
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                margin: 0;
+                padding: 0;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+                color: white;
+                text-align: center;
+            }
+            .container {
+                padding: 2rem;
+                max-width: 800px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 15px;
+                backdrop-filter: blur(10px);
+                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            }
+            h1 {
+                font-size: 2.5rem;
+                margin-bottom: 1rem;
+                color: #ffffff;
+            }
+            p {
+                font-size: 1.2rem;
+                line-height: 1.6;
+                margin-bottom: 1.5rem;
+                color: #e0e0e0;
+            }
+            .status {
+                display: inline-block;
+                padding: 0.5rem 1rem;
+                background: #4CAF50;
+                border-radius: 25px;
+                font-weight: bold;
+            }
+            .version {
+                margin-top: 2rem;
+                font-size: 0.9rem;
+                color: #a0a0a0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>🏛️ Backend E-Justice</h1>
+            <p>Bienvenue sur l'API du système de justice électronique</p>
+            <div class="status">Statut: Opérationnel</div>
+            <p class="version">Version 1.0.0</p>
+        </div>
+    </body>
+    </html>
+    `;
+    res.send(html);
+});
+
 // Fonction pour vérifier si une table existe
 async function tableExists(tableName) {
     try {
