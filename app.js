@@ -25,26 +25,38 @@ const statistiquesRoutes = require('./routes/statistiquesRoutes');
 
 // Configuration CORS avancée
 const corsOptions = {
-    origin: [
-        'http://127.0.0.1:8000',
-        'https://emore-junior.alwaysdata.net',
-        'https://emore-junior.alwaysdata.net/ejustice',
-        'https://emore-junior.alwaysdata.net/ejustice/',
-        // Garder les URLs de développement local pour le debug
-        'http://localhost:3000',
-        'http://localhost:8080',
-        'http://localhost:5000'
-    ],
+    origin: '*', // Autoriser toutes les origines
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+    allowedHeaders: [
+        'Content-Type',
+        'Authorization',
+        'X-Requested-With',
+        'Accept',
+        'Origin',
+        'Referer',
+        'User-Agent',
+        'sec-ch-ua',
+        'sec-ch-ua-mobile',
+        'sec-ch-ua-platform'
+    ],
+    exposedHeaders: ['Content-Range', 'X-Content-Range'],
     credentials: true,
-    optionsSuccessStatus: 200
+    optionsSuccessStatus: 200,
+    maxAge: 3600 // Mettre en cache les résultats du pre-flight pendant 1 heure
 };
 
 app.use(cors(corsOptions));
 
 // Middleware pour gérer les erreurs CORS préflight
 app.options('*', cors(corsOptions));
+
+// Middleware personnalisé pour s'assurer que les en-têtes CORS sont toujours présents
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Referer, User-Agent, sec-ch-ua, sec-ch-ua-mobile, sec-ch-ua-platform');
+    next();
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
