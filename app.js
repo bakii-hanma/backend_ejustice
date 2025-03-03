@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
 const db = require('./config/database');
 const plainteRoutes = require('./routes/plainteRoutes');
@@ -22,14 +23,19 @@ const detenuRoutes = require('./routes/detenuRoutes');
 const adminPenitentiaireRoutes = require('./routes/adminPenitentiaireRoutes');
 const statistiquesRoutes = require('./routes/statistiquesRoutes');
 
-// Configuration des CORS et des headers
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  next();
-});
+// Configuration CORS avancée
+const corsOptions = {
+    origin: ['http://localhost:3000', 'http://localhost', 'http://localhost:8080', 'http://localhost:5000', 'http://127.0.0.1:5000'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+    credentials: true,
+    optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
+
+// Middleware pour gérer les erreurs CORS préflight
+app.options('*', cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
