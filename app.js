@@ -23,38 +23,33 @@ const detenuRoutes = require('./routes/detenuRoutes');
 const adminPenitentiaireRoutes = require('./routes/adminPenitentiaireRoutes');
 const statistiquesRoutes = require('./routes/statistiquesRoutes');
 
-// Configuration CORS avancée
-const corsOptions = {
-    origin: '*', // Autoriser toutes les origines
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: [
-        'Content-Type',
-        'Authorization',
-        'X-Requested-With',
-        'Accept',
-        'Origin',
-        'Referer',
-        'User-Agent',
-        'sec-ch-ua',
-        'sec-ch-ua-mobile',
-        'sec-ch-ua-platform'
-    ],
-    exposedHeaders: ['Content-Range', 'X-Content-Range'],
-    credentials: true,
-    optionsSuccessStatus: 200,
-    maxAge: 3600 // Mettre en cache les résultats du pre-flight pendant 1 heure
-};
-
-app.use(cors(corsOptions));
-
-// Middleware pour gérer les erreurs CORS préflight
-app.options('*', cors(corsOptions));
-
-// Middleware personnalisé pour s'assurer que les en-têtes CORS sont toujours présents
+// Middleware pour gérer les CORS de manière globale
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Referer, User-Agent, sec-ch-ua, sec-ch-ua-mobile, sec-ch-ua-platform');
+    // Autoriser toutes les origines
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    
+    // Autoriser les méthodes HTTP
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    
+    // Autoriser les en-têtes spécifiques
+    res.setHeader('Access-Control-Allow-Headers', 
+        'Origin, X-Requested-With, Content-Type, Accept, Authorization, ' +
+        'Referer, User-Agent, sec-ch-ua, sec-ch-ua-mobile, sec-ch-ua-platform'
+    );
+
+    // Autoriser les credentials
+    res.setHeader('Access-Control-Allow-Credentials', true);
+
+    // Définir le type de contenu pour les réponses JSON
+    if (req.method !== 'OPTIONS') {
+        res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    }
+
+    // Gérer les requêtes OPTIONS préliminaires
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+
     next();
 });
 
