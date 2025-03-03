@@ -25,7 +25,16 @@ const statistiquesRoutes = require('./routes/statistiquesRoutes');
 
 // Configuration CORS avancée
 const corsOptions = {
-    origin: ['http://localhost:3000', 'http://localhost', 'http://localhost:8080', 'http://localhost:5000', 'http://127.0.0.1:5000'],
+    origin: [
+        'http://127.0.0.1:8000',
+        'https://emore-junior.alwaysdata.net',
+        'https://emore-junior.alwaysdata.net/ejustice',
+        'https://emore-junior.alwaysdata.net/ejustice/',
+        // Garder les URLs de développement local pour le debug
+        'http://localhost:3000',
+        'http://localhost:8080',
+        'http://localhost:5000'
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
     credentials: true,
