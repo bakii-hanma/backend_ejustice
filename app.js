@@ -23,6 +23,15 @@ const detenuRoutes = require('./routes/detenuRoutes');
 const adminPenitentiaireRoutes = require('./routes/adminPenitentiaireRoutes');
 const statistiquesRoutes = require('./routes/statistiquesRoutes');
 
+// Configuration CORS
+const corsOptions = {
+    origin: ['http://127.0.0.1:8000', 'http://localhost:8000', 'https://emore-junior.alwaysdata.net', 'https://emore-junior.alwaysdata.net/ejustice'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin', 'Access-Control-Allow-Origin'],
+    credentials: true,
+    optionsSuccessStatus: 200
+};
+
 // Middleware de logging pour les requêtes
 app.use((req, res, next) => {
     console.log('\n=== Nouvelle Requête ===');
@@ -35,48 +44,23 @@ app.use((req, res, next) => {
     next();
 });
 
-// Middleware pour gérer les CORS de manière globale
+// Appliquer CORS
+app.use(cors(corsOptions));
+
+// Middleware personnalisé pour gérer les CORS
 app.use((req, res, next) => {
     const origin = req.headers.origin;
-    console.log('Traitement CORS pour l\'origine:', origin);
-
-    // Liste des origines autorisées
-    const allowedOrigins = [
-        'http://127.0.0.1:8000',
-        'http://localhost:8000',
-        'https://emore-junior.alwaysdata.net',
-        'https://emore-junior.alwaysdata.net/ejustice'
-    ];
-
+    
     // Vérifier si l'origine est autorisée
-    if (allowedOrigins.includes(origin)) {
-        console.log('Origine autorisée:', origin);
+    if (corsOptions.origin.includes(origin)) {
         res.setHeader('Access-Control-Allow-Origin', origin);
-    } else {
-        console.log('Origine non autorisée:', origin);
-        res.setHeader('Access-Control-Allow-Origin', allowedOrigins[0]); // Autoriser par défaut le premier
-    }
-    
-    // Autoriser les méthodes HTTP
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-    
-    // Autoriser les en-têtes spécifiques
-    res.setHeader('Access-Control-Allow-Headers', 
-        'Origin, X-Requested-With, Content-Type, Accept, Authorization, ' +
-        'Referer, User-Agent, sec-ch-ua, sec-ch-ua-mobile, sec-ch-ua-platform'
-    );
-
-    // Autoriser les credentials
-    res.setHeader('Access-Control-Allow-Credentials', true);
-
-    // Définir le type de contenu pour les réponses JSON
-    if (req.method !== 'OPTIONS') {
-        res.setHeader('Content-Type', 'application/json; charset=utf-8');
+        res.setHeader('Access-Control-Allow-Methods', corsOptions.methods.join(', '));
+        res.setHeader('Access-Control-Allow-Headers', corsOptions.allowedHeaders.join(', '));
+        res.setHeader('Access-Control-Allow-Credentials', 'true');
     }
 
-    // Gérer les requêtes OPTIONS préliminaires
+    // Gérer les requêtes OPTIONS
     if (req.method === 'OPTIONS') {
-        console.log('Requête OPTIONS détectée - Envoi de la réponse préliminaire');
         return res.status(200).end();
     }
 
