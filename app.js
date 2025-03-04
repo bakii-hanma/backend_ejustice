@@ -23,10 +23,39 @@ const detenuRoutes = require('./routes/detenuRoutes');
 const adminPenitentiaireRoutes = require('./routes/adminPenitentiaireRoutes');
 const statistiquesRoutes = require('./routes/statistiquesRoutes');
 
+// Middleware de logging pour les requêtes
+app.use((req, res, next) => {
+    console.log('\n=== Nouvelle Requête ===');
+    console.log('Méthode:', req.method);
+    console.log('URL:', req.url);
+    console.log('Headers reçus:', req.headers);
+    console.log('Origin:', req.headers.origin);
+    console.log('Referer:', req.headers.referer);
+    console.log('=====================\n');
+    next();
+});
+
 // Middleware pour gérer les CORS de manière globale
 app.use((req, res, next) => {
-    // Autoriser toutes les origines
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    const origin = req.headers.origin;
+    console.log('Traitement CORS pour l\'origine:', origin);
+
+    // Liste des origines autorisées
+    const allowedOrigins = [
+        'http://127.0.0.1:8000',
+        'http://localhost:8000',
+        'https://emore-junior.alwaysdata.net',
+        'https://emore-junior.alwaysdata.net/ejustice'
+    ];
+
+    // Vérifier si l'origine est autorisée
+    if (allowedOrigins.includes(origin)) {
+        console.log('Origine autorisée:', origin);
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    } else {
+        console.log('Origine non autorisée:', origin);
+        res.setHeader('Access-Control-Allow-Origin', allowedOrigins[0]); // Autoriser par défaut le premier
+    }
     
     // Autoriser les méthodes HTTP
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
@@ -47,6 +76,7 @@ app.use((req, res, next) => {
 
     // Gérer les requêtes OPTIONS préliminaires
     if (req.method === 'OPTIONS') {
+        console.log('Requête OPTIONS détectée - Envoi de la réponse préliminaire');
         return res.status(200).end();
     }
 
