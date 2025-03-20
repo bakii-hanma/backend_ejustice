@@ -25,7 +25,16 @@ const statistiquesRoutes = require('./routes/statistiquesRoutes');
 
 // Configuration CORS
 const corsOptions = {
-    origin: ['http://127.0.0.1:8000', 'http://localhost:8000', 'https://emore-junior.alwaysdata.net', 'https://emore-junior.alwaysdata.net/ejustice'],
+    origin: [
+        'http://127.0.0.1:8000', 
+        'http://localhost:8000',
+        'http://localhost/plaingnant_ejustice/',
+        'http://localhost/plaingnant_ejustice',
+        'http://plaignants-ejustice.obamespacevert.ga',
+        'https://plaignants-ejustice.obamespacevert.ga',
+        'https://emore-junior.alwaysdata.net',
+        'https://emore-junior.alwaysdata.net/ejustice'
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin', 'Access-Control-Allow-Origin'],
     credentials: true,
